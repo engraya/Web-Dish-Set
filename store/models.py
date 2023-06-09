@@ -13,7 +13,14 @@ class Customer(models.Model):
 
 
 class Product(models.Model):
+	CATEGORY_CHOICES = (
+		("Fruits", "Fruits"),
+		("Vegetables", "Vegetables"),
+		("Dishes", "Dishes")
+	)
+
 	name = models.CharField(max_length=200)
+	category = models.CharField(choices=CATEGORY_CHOICES, max_length=20, null=True, blank=True)
 	price = models.DecimalField(max_digits=8, decimal_places=2)
 	digital = models.BooleanField(default=False,null=True, blank=True)
 	image = models.ImageField(null=True, blank=True)
@@ -85,3 +92,6 @@ class ShippingAddress(models.Model):
 
 	def __str__(self):
 		return self.address
+
+
+

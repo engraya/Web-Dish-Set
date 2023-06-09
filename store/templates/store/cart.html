@@ -6,13 +6,13 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="box-element">
-            <a  class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+            <a  class="btn btn-outline-dark" href="{% url 'shop' %}">&#x2190; Continue Shopping</a>
             <br>
             <br>
             <table class="table">
                 <tr>
                     <th><h5>Total Items:<strong> {{order.get_cart_items}}</strong></h5></th>
-                    <th><h5>Total Price:<strong>N {{order.get_cart_total}}</strong></h5></th>
+                    <th><h5>Total Price:<strong>&#8358 {{order.get_cart_total}}</strong></h5></th>
                     <th>
                         <a  style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
                     </th>
@@ -35,7 +35,7 @@
             <div class="cart-row">
                 <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}" alt=""></div>
                 <div style="flex:2">{{item.product.name}}</div>
-                <div style="flex:1">N{{item.product.price|floatformat:0}}</div>
+                <div style="flex:1">&#8358 {{item.product.price|floatformat:0}}</div>
                 <div style="flex:1">
                     <p class="quantity">{{item.quantity}}</p>
                     <div class="quantity">
@@ -44,7 +44,7 @@
                         <img data-product="{{item.product.id}}" data-action="remove" class="chg-quantity update-cart" src="{% static 'images/arrow-down.png' %}" alt="">
                     </div>
                 </div>
-                <div style="flex:1"><strong>N{{item.get_total|floatformat:0}}</strong></div>
+                <div style="flex:1"><strong>&#8358 {{item.get_total|floatformat:0}}</strong></div>
             </div>
             {% endfor %}
         </div>
