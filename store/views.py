@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate #add this
 from django.contrib.auth.forms import AuthenticationForm #add this
 
+
  # Create your views here.
 
 
@@ -38,27 +39,22 @@ class CategoryView(View):
 
 
 def shop(request):
-    product_list = Product.objects.all()
-    paginator = Paginator(product_list, 6)
-    page_number = request.GET.get('get')
+    products = Product.objects.all()
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     data = cartData(request)
     cartItems = data['cartItems']
-    
-    products = Product.objects.all()
-
-    context = {'products' : products, 'cartItems' : cartItems, 'page_obj' : page_obj}
+    context = {'products' : products, 'cartItems' : cartItems, 'product' : page_obj}
     return  render(request, 'store/store.html', context)
 
 
 def cart(request):
-
     data = cartData(request)
     cartItems = data['cartItems']
     order = data['order']
-    items = data['items']
-       
+    items = data['items'] 
     context = {'items' : items, 'order' : order, 'cartItems' : cartItems}
     return  render(request, 'store/cart.html', context)
 
