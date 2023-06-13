@@ -16,7 +16,10 @@ class Product(models.Model):
 	CATEGORY_CHOICES = (
 		("Fruits", "Fruits"),
 		("Vegetables", "Vegetables"),
-		("Dishes", "Dishes")
+		("Nigerian", "Nigerian"),
+		("French", "French"),
+		("Turkish", "Turkish"),
+		("Other", "Other"),
 	)
 
 	name = models.CharField(max_length=200)

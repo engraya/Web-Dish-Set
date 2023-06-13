@@ -1,24 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.http import JsonResponse
 import datetime
 import json
 from .utils import cookieCart, cartData, guestOrder
-
 from django.core.paginator import Paginator
 from .models import Product 
+from django.views import View
+from .forms import NewUserForm
+from django.contrib.auth import login, logout
+from django.contrib import messages
+from django.contrib.auth import login, authenticate #add this
+from django.contrib.auth.forms import AuthenticationForm #add this
 
  # Create your views here.
-
-def listing(request):
-    product_list = Product.objects.all()
-    paginator = Paginator(product_list, 9)
-
-    page_number = request.GET.get('get')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
-    return render(request, 'store/store.html', context)
-
 
 
 def landingPage(request):
@@ -31,17 +26,30 @@ def bookTable(request):
 def contactPage(request):
     return render(request, 'store/contactPage.html')
 
+class CategoryView(View):
+    def get(self, request, val):
+        product = Product.objects.filter(category=val)
+        name = Product.objects.filter(category=val)
+        data = cartData(request)
+        cartItems = data['cartItems']
+        order = data['order']
+        products = Product.objects.all()
+        return render(request, 'store/category.html', locals())
+
+
 def shop(request):
+    product_list = Product.objects.all()
+    paginator = Paginator(product_list, 6)
+    page_number = request.GET.get('get')
+    page_obj = paginator.get_page(page_number)
 
     data = cartData(request)
     cartItems = data['cartItems']
     
     products = Product.objects.all()
 
-    context = {'products' : products, 'cartItems' : cartItems}
+    context = {'products' : products, 'cartItems' : cartItems, 'page_obj' : page_obj}
     return  render(request, 'store/store.html', context)
-
-
 
 
 def cart(request):
@@ -122,3 +130,42 @@ def processOrder(request):
             zipcode=data['shipping']['zipcode'],
             )
     return JsonResponse('Payment submitted..', safe=False)
+
+def register_request(request):
+    if request.method == "POST":
+	    form = NewUserForm(request.POST)
+	    if form.is_valid():
+		    user = form.save()
+		    login(request, user)
+		    messages.success(request, "Registration successful." )
+		    return redirect("shop")
+	    messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewUserForm()
+    context = {"register_form" : form}
+    return render (request, "store/register.html", context)
+
+
+def login_request(request):
+    if request.method == "POST":
+	    form = AuthenticationForm(request, data=request.POST)
+	    if form.is_valid():
+		    username = form.cleaned_data.get('username')
+		    password = form.cleaned_data.get('password')
+		    user = authenticate(username=username, password=password)
+		    if user is not None:
+			    login(request, user)
+			    messages.info(request, f"You are now logged in as {username}.")
+			    return redirect("shop")
+		    else:
+			    messages.error(request,"Invalid username or password.")
+	    else:
+		    messages.error(request,"Invalid username or password.")
+    form = AuthenticationForm()
+    context = {"login_form": form}
+    return render(request, "store/login.html", context)
+
+
+def logout_request(request):
+	logout(request)
+	messages.info(request, "You have successfully logged out.") 
+	return redirect("shop")

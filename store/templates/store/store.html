@@ -7,13 +7,14 @@
 {% block content %}
 <div class="row">
     {% for product in products %}
-    <div class="col-lg-4">
-        <img class="thumbnail" src="{{product.imageURL}}" alt="">
+    <div class="col-lg-4 rounded">
+
+        <img class="thumbnail rounded-circle" src="{{product.imageURL}}" alt="">
         <div class="box-element product">
             <h6><strong>{{product.name}}</strong></h6>
             <hr>
-            <button data-product="{{product.id}}" data-action="add" class="btn btn-success add-btn update-cart">Add to Cart</button>
-            <a class="btn btn-outline-success" href="#">View</a>
+            <button data-product="{{product.id}}" data-action="add" class="btn btn-success btn-sm rounded-pill add-btn update-cart">Add to Cart</button>
+            <a class="btn btn-outline-success btn-sm rounded-pill" href="#">View</a>
             <h4 style="display: inline-block; float: right">&#8358 {{product.price|floatformat:0}}</h4>
         </div>
     </div>
@@ -21,8 +22,17 @@
 
 </div>
 
-<div class="pagination">
-    <span class="step-links">
+<ul class="pagination justify-content-center text-bg-success bg-info px-3 align-content-lg-center" style="margin:20px 0">
+    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+  </ul>
+
+<div class="pagination text-bg-success bg-info px-3 align-content-lg-center">
+    <span class="step-links align-content-center">
         {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; First</a>
             <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
